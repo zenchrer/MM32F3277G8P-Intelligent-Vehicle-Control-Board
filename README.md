@@ -1,0 +1,2 @@
+# MM32F3277G8P-Intelligent-Vehicle-Control-Board
+本项目是全国大学生智能车竞赛桂林信息科技学院2022年平衡信标组的硬件项目文件。采用了灵动微电子MM32F3277G8P作为MCU；使用Kicad绘制.
