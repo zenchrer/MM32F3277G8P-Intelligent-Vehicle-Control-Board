@@ -27,18 +27,8 @@ int main(void)
 {
     clock_init(SYSTEM_CLOCK_120M); // 初始化芯片时钟 工作频率为 120MHz
     debug_init();                  // 初始化默认 Debug UART
-    rc_init();
     // 此处编写用户代码 例如外设初始化代码等
-    uint16_t data[128];
-    int16_t data_index = 0;
-    for (; 64 > data_index; data_index++)
-        data[data_index] = data_index;
-    for (data_index = 64; 128 > data_index; data_index++)
-        data[data_index] = 128 - data_index;
-
-    ips200_set_dir(IPS200_PORTAIT);
-    ips200_init(IPS200_TYPE_PARALLEL8);
-    ips200_set_color(RGB565_RED, RGB565_GRAY);
+    rc_init();
     // 此处编写用户代码 例如外设初始化代码等
 
     while (1)
