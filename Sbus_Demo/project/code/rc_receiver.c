@@ -2,11 +2,11 @@
 
 static uint8 rc_uart_data;
 
-uint8_t First_Byte_flag_RC     = 1; //首字节标志
-uint8_t RC_RX_Finish           = 0;
+uint8_t First_Byte_flag_RC     = 1;   //首字节标志
+uint8_t RC_RX_Finish           = 0;   //接收完成标志位
 uint8_t RC_RXIndex             = 0;   //当前接收字节数
 uint8_t RC_RXBuffer[RC_RX_LEN] = {0}; //接收缓冲
-RC_CH_Struct RC_CH;
+RC_CH_Struct RC_CH;                   //遥控器通道结构体
 
 void rc_init(void)
 {
@@ -19,7 +19,7 @@ void rc_init(void)
     UART3->GCR |= UART_GCR_UARTEN(1);
     UART3->CCR |= UART_CCR_CHAR(3); // 8bits 数据位
     UART3->CCR |= UART_CCR_SPB0(1); // 2停止位
-    UART3->CCR |= UART_CCR_SPB1(0);
+    UART3->CCR &= ~UART_CCR_SPB1(0);
     UART3->CCR |= UART_CCR_PSEL(1); // 偶校验
     UART3->CCR |= UART_CCR_PEN(1);  // 偶校验
 
