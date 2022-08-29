@@ -13,3 +13,4 @@ Sbus_Demo/project/mdk/EventRecorderStub.scvd
 Sbus_Demo/project/mdk/Listings/*
 Sbus_Demo/project/mdk/JLinkLog.txt
 Sbus_Demo/.gitignore
+fp-info-cache

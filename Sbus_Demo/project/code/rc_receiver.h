@@ -1,3 +1,13 @@
+/**
+ * @file rc_receiver.h
+ * @author zenchrer (zenchrer@qq.com)
+ * @brief 
+ * @version 0.1
+ * @date 2022-08-29
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #ifndef RC_RECEIVER_H
 #define RC_RECEIVER_H
 
@@ -9,42 +19,40 @@
 #include "zf_driver_gpio.h"
 #include "zf_driver_uart.h"
 
-#define RC_UART_INDEX       (UART_3)       // ÎŞÏß´®¿Ú¶ÔÓ¦Ê¹ÓÃµÄ´®¿ÚºÅ
-#define RC_UART_BUAD_RATE   (100000)       // ÎŞÏß´®¿Ú¶ÔÓ¦Ê¹ÓÃµÄ´®¿Ú²¨ÌØÂÊ
-#define RC_UART_TX_PIN      (UART3_TX_B10) // ÎŞÏß´®¿Ú¶ÔÓ¦Ä£¿éµÄ TX Òª½Óµ½µ¥Æ¬»úµÄ RX
-#define RC_UART_RX_PIN      (UART3_RX_B11) // ÎŞÏß´®¿Ú¶ÔÓ¦Ä£¿éµÄ RX Òª½Óµ½µ¥Æ¬»úµÄ TX
-#define RC_UART_BUFFER_SIZE (64)
+#define RC_UART_INDEX       (UART_3)       // Sbusä¸²å£å¯¹åº”ä½¿ç”¨çš„ä¸²å£å·
+#define RC_UART_BUAD_RATE   (100000)       // Sbusä¸²å£å¯¹åº”ä½¿ç”¨çš„ä¸²å£æ³¢ç‰¹ç‡
+#define RC_UART_RX_PIN      (UART3_RX_B11) // Sbusä¸²å£å¯¹åº”æ¨¡å—çš„ RX è¦æ¥åˆ°å•ç‰‡æœºçš„ TX
 
-#define RC_RX_LEN           25 // 25?
+#define RC_RX_LEN           25 // 25
 
 #define StartByte           0x0f
 #define EndByte             0x00
 
-extern uint8_t First_Byte_flag_RC; //Ê××Ö½Ú±êÖ¾
+extern uint8_t First_Byte_flag_RC; //é¦–å­—èŠ‚æ ‡å¿—
 extern uint8_t RC_RX_Finish;
-extern uint8_t RC_RXIndex;             //µ±Ç°½ÓÊÕ×Ö½ÚÊı
-extern uint8_t RC_RXBuffer[RC_RX_LEN]; //½ÓÊÕ»º³å
+extern uint8_t RC_RXIndex;             //å½“å‰æ¥æ”¶å­—èŠ‚æ•°
+extern uint8_t RC_RXBuffer[RC_RX_LEN]; //æ¥æ”¶ç¼“å†²
 
 uint8_t rc_update(uint8_t *buf);
 typedef struct
 {
-    uint16_t CH1;         // 1Í¨µÀ
-    uint16_t CH2;         // 2Í¨µÀ
-    uint16_t CH3;         // 3Í¨µÀ
-    uint16_t CH4;         // 4Í¨µÀ
-    uint16_t CH5;         // 5Í¨µÀ
-    uint16_t CH6;         // 6Í¨µÀ
-    uint16_t CH7;         // 7Í¨µÀ
-    uint16_t CH8;         // 8Í¨µÀ
-    uint16_t CH9;         // 9Í¨µÀ
-    uint16_t CH10;        // 10Í¨µÀ
-    uint16_t CH11;        // 11Í¨µÀ
-    uint16_t CH12;        // 12Í¨µÀ
-    uint16_t CH13;        // 13Í¨µÀ
-    uint16_t CH14;        // 14Í¨µÀ
-    uint16_t CH15;        // 15Í¨µÀ
-    uint16_t CH16;        // 16Í¨µÀ
-    uint8_t ConnectState; //ÓĞĞÂÊı¾İµÄ±êÖ¾
+    uint16_t CH1;         // 1é€šé“
+    uint16_t CH2;         // 2é€šé“
+    uint16_t CH3;         // 3é€šé“
+    uint16_t CH4;         // 4é€šé“
+    uint16_t CH5;         // 5é€šé“
+    uint16_t CH6;         // 6é€šé“
+    uint16_t CH7;         // 7é€šé“
+    uint16_t CH8;         // 8é€šé“
+    uint16_t CH9;         // 9é€šé“
+    uint16_t CH10;        // 10é€šé“
+    uint16_t CH11;        // 11é€šé“
+    uint16_t CH12;        // 12é€šé“
+    uint16_t CH13;        // 13é€šé“
+    uint16_t CH14;        // 14é€šé“
+    uint16_t CH15;        // 15é€šé“
+    uint16_t CH16;        // 16é€šé“
+    uint8_t ConnectState; //æœ‰æ–°æ•°æ®çš„æ ‡å¿—
 } RC_CH_Struct;
 extern RC_CH_Struct RC_CH;
 void rc_init(void);

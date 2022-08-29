@@ -1,33 +1,43 @@
+/**
+ * @file rc_receiver.c
+ * @author zenchrer (zenchrer@qq.com)
+ * @brief
+ * @version 0.1
+ * @date 2022-08-29
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
 #include "rc_receiver.h"
 
 static uint8 rc_uart_data;
 
-uint8_t First_Byte_flag_RC     = 1;   //Ê××Ö½Ú±êÖ¾
-uint8_t RC_RX_Finish           = 0;   //½ÓÊÕÍê³É±êÖ¾Î»
-uint8_t RC_RXIndex             = 0;   //µ±Ç°½ÓÊÕ×Ö½ÚÊý
-uint8_t RC_RXBuffer[RC_RX_LEN] = {0}; //½ÓÊÕ»º³å
-RC_CH_Struct RC_CH;                   //Ò£¿ØÆ÷Í¨µÀ½á¹¹Ìå
+uint8_t First_Byte_flag_RC     = 1;   //é¦–å­—èŠ‚æ ‡å¿—
+uint8_t RC_RX_Finish           = 0;   //æŽ¥æ”¶å®Œæˆæ ‡å¿—ä½
+uint8_t RC_RXIndex             = 0;   //å½“å‰æŽ¥æ”¶å­—èŠ‚æ•°
+uint8_t RC_RXBuffer[RC_RX_LEN] = {0}; //æŽ¥æ”¶ç¼“å†²
+RC_CH_Struct RC_CH;                   //é¥æŽ§å™¨é€šé“ç»“æž„ä½“
 
 void rc_init(void)
 {
-    afio_init((gpio_pin_enum)(RC_UART_RX_PIN & 0xFF), GPI, (gpio_af_enum)((RC_UART_RX_PIN & 0xF00) >> 8), GPI_FLOATING_IN); // ÌáÈ¡¶ÔÓ¦IOË÷Òý AF¹¦ÄÜ±àÂë
+    afio_init((gpio_pin_enum)(RC_UART_RX_PIN & 0xFF), GPI, (gpio_af_enum)((RC_UART_RX_PIN & 0xF00) >> 8), GPI_FLOATING_IN); // æå–å¯¹åº”IOç´¢å¼• AFåŠŸèƒ½ç¼–ç 
 
-    RCC->APB1ENR |= ((uint32)0x00000001 << 18);   // Ê¹ÄÜ UART3 Ê±ÖÓ
-    RCC->APB1RSTR |= ((uint32)0x00000001 << 18);  // ¸´Î» UART3
-    RCC->APB1RSTR &= ~((uint32)0x00000001 << 18); // Íê³É¸´Î» UART3
+    RCC->APB1ENR |= ((uint32)0x00000001 << 18);   // ä½¿èƒ½ UART3 æ—¶é’Ÿ
+    RCC->APB1RSTR |= ((uint32)0x00000001 << 18);  // å¤ä½ UART3
+    RCC->APB1RSTR &= ~((uint32)0x00000001 << 18); // å®Œæˆå¤ä½ UART3
 
-    UART3->GCR |= UART_GCR_UARTEN(1);
-    UART3->CCR |= UART_CCR_CHAR(3); // 8bits Êý¾ÝÎ»
-    UART3->CCR |= UART_CCR_SPB0(1); // 2Í£Ö¹Î»
+    UART3->GCR |= UART_GCR_UARTEN(1); // ä½¿èƒ½ UART
+    UART3->CCR |= UART_CCR_CHAR(3);   // 8bits æ•°æ®ä½
+    UART3->CCR |= UART_CCR_SPB0(1);   // 2åœæ­¢ä½
     UART3->CCR &= ~UART_CCR_SPB1(0);
-    UART3->CCR |= UART_CCR_PSEL(1); // Å¼Ð£Ñé
-    UART3->CCR |= UART_CCR_PEN(1);  // Å¼Ð£Ñé
+    UART3->CCR |= UART_CCR_PSEL(1); // å¶æ ¡éªŒ
+    UART3->CCR |= UART_CCR_PEN(1);  // å¶æ ¡éªŒ
 
-    UART3->BRR = (system_clock / RC_UART_BUAD_RATE) / 16; // ÉèÖÃ²¨ÌØÂÊ
-    UART3->FRA = (system_clock / RC_UART_BUAD_RATE) % 16; // ÉèÖÃ²¨ÌØÂÊ
+    UART3->BRR = (system_clock / RC_UART_BUAD_RATE) / 16; // è®¾ç½®æ³¢ç‰¹çŽ‡
+    UART3->FRA = (system_clock / RC_UART_BUAD_RATE) % 16; // è®¾ç½®æ³¢ç‰¹çŽ‡
 
-    UART3->CCR |= UART_CCR_CHAR(3); // 8bits Êý¾ÝÎ»
-    UART3->GCR |= UART_GCR_RXEN(1); // Ê¹ÄÜ TX RX UART
+    UART3->CCR |= UART_CCR_CHAR(3); // 8bits æ•°æ®ä½
+    UART3->GCR |= UART_GCR_RXEN(1); // ä½¿èƒ½  RX only
 
     uart_rx_irq(RC_UART_INDEX, 1);
 }
@@ -37,7 +47,7 @@ void rc_uart_callback(void)
     uart_query_byte(RC_UART_INDEX, &rc_uart_data);
     if ((rc_uart_data == 0x0f) || (First_Byte_flag_RC == 0))
     {
-        First_Byte_flag_RC = 0; //Ê××Ö½ÚÒÑÊ¶±ð
+        First_Byte_flag_RC = 0; //é¦–å­—èŠ‚å·²è¯†åˆ«
         if (RC_RXIndex < (RC_RX_LEN - 2))
         {
             RC_RXBuffer[RC_RXIndex] = rc_uart_data;
@@ -46,18 +56,18 @@ void rc_uart_callback(void)
         else if (RC_RXIndex < (RC_RX_LEN - 1))
         {
             RC_RXBuffer[RC_RX_LEN - 1] = rc_uart_data;
-            First_Byte_flag_RC         = 1; //×¼±¸ÔÙ´ÎÊ¶±ðÊ××Ö½Ú
-            RC_RXIndex                 = 0; //Íê³ÉÒ»Ö¡£¨25×Ö½Ú£©Êý¾Ý½ÓÊÕ£¬×¼±¸ÏÂÒ»´Î½ÓÊÕ
+            First_Byte_flag_RC         = 1; //å‡†å¤‡å†æ¬¡è¯†åˆ«é¦–å­—èŠ‚
+            RC_RXIndex                 = 0; //å®Œæˆä¸€å¸§ï¼ˆ25å­—èŠ‚ï¼‰æ•°æ®æŽ¥æ”¶ï¼Œå‡†å¤‡ä¸‹ä¸€æ¬¡æŽ¥æ”¶
             if ((RC_RXBuffer[0] == StartByte) && (RC_RXBuffer[24] == EndByte))
             {
-                RC_RX_Finish = 1; //½ÓÊÕ³É¹¦
+                RC_RX_Finish = 1; //æŽ¥æ”¶æˆåŠŸ
                 rc_update(RC_RXBuffer);
             }
             else
             {
-                RC_RX_Finish       = 0; //½ÓÊÕÊ§°Ü
-                First_Byte_flag_RC = 1; //×¼±¸ÔÙ´ÎÊ¶±ðÊ××Ö½Ú
-                RC_RXIndex         = 0; //½ÓÊÕÊ§°Ü£¬×¼±¸ÏÂÒ»´Î½ÓÊÕ
+                RC_RX_Finish       = 0; //æŽ¥æ”¶å¤±è´¥
+                First_Byte_flag_RC = 1; //å‡†å¤‡å†æ¬¡è¯†åˆ«é¦–å­—èŠ‚
+                RC_RXIndex         = 0; //æŽ¥æ”¶å¤±è´¥ï¼Œå‡†å¤‡ä¸‹ä¸€æ¬¡æŽ¥æ”¶
             }
         }
     }
