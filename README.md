@@ -5,7 +5,7 @@
 ## &nbsp;&nbsp;&nbsp;&nbsp;后又有山大威海无线充电组使用一百多克的逐飞2S 2200mAh电池跑出35.5S的好成绩，荣获国一桂冠。
 
 ## 已添加[Sbus解析例程](https://github.com/zenchrer/MM32-Sbus-Demo.git)<br>
-
+8/31/2022 9:24:01 PM <br>
 &nbsp;&nbsp;&nbsp;&nbsp;本项目是2022年全国大学生智能车竞赛平衡信标组桂林信息科技学院Tornado(队)的硬件开源;
 在一块PCB上集成了电机驱动以及其它外设接口,基本满足平衡信标组的功能需求,引脚大部分兼容某飞科技的开源程序,某飞的代码虽然有些BUG,但是大体方便可靠(个人认为比隔壁lq的好);电源部分设计参考了2021年立创开源广场moximoxi大佬的开源硬件:[传送门](https://oshwhub.com/moximoxi/shuang-jum3_mini)<br>
 
